@@ -29,10 +29,15 @@ jobs:
 
       - name: Zipalign APK
         run: |
-          # O zipalign já vem instalado nos runners do GitHub Actions
-          # Vamos alinhar o APK gerado para evitar o erro de verificação
+          # Localizar o zipalign no Android SDK
+          ZIPALIGN_PATH=$(find $ANDROID_HOME/build-tools -name zipalign | sort -r | head -n 1)
+          if [ -z "$ZIPALIGN_PATH" ]; then
+            echo "Erro: zipalign não encontrado no Android SDK!"
+            exit 1
+          fi
+          echo "Usando zipalign em: $ZIPALIGN_PATH"
           mv proxyandroid_unsigned.apk proxyandroid_unaligned.apk
-          zipalign -v 4 proxyandroid_unaligned.apk proxyandroid_unsigned.apk
+          $ZIPALIGN_PATH -v 4 proxyandroid_unaligned.apk proxyandroid_unsigned.apk
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
