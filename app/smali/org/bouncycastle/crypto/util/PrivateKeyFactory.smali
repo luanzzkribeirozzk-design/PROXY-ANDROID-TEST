@@ -1,0 +1,923 @@
+.class public Lorg/bouncycastle/crypto/util/PrivateKeyFactory;
+.super Ljava/lang/Object;
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 0
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+.method public static createKey(Ljava/io/InputStream;)Lorg/bouncycastle/crypto/params/AsymmetricKeyParameter;
+    .locals 1
+    .annotation system Ldalvik/annotation/Throws;
+        value = {
+            Ljava/io/IOException;
+        }
+    .end annotation
+
+    new-instance v0, Lorg/bouncycastle/asn1/ASN1InputStream;
+
+    invoke-direct {v0, p0}, Lorg/bouncycastle/asn1/ASN1InputStream;-><init>(Ljava/io/InputStream;)V
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1InputStream;->readObject()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/crypto/util/PrivateKeyFactory;->createKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)Lorg/bouncycastle/crypto/params/AsymmetricKeyParameter;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public static createKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)Lorg/bouncycastle/crypto/params/AsymmetricKeyParameter;
+    .locals 9
+    .annotation system Ldalvik/annotation/Throws;
+        value = {
+            Ljava/io/IOException;
+        }
+    .end annotation
+
+    const/16 v8, 0x20
+
+    const/4 v7, 0x1
+
+    const/4 v2, 0x0
+
+    if-nez p0, :cond_0
+
+    new-instance v0, Ljava/lang/IllegalArgumentException;
+
+    const-string v1, "keyInfo argument null"
+
+    invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_0
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKeyAlgorithm()Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getAlgorithm()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v0
+
+    sget-object v3, Lorg/bouncycastle/asn1/pkcs/PKCSObjectIdentifiers;->rsaEncryption:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-nez v3, :cond_1
+
+    sget-object v3, Lorg/bouncycastle/asn1/pkcs/PKCSObjectIdentifiers;->id_RSASSA_PSS:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-nez v3, :cond_1
+
+    sget-object v3, Lorg/bouncycastle/asn1/x509/X509ObjectIdentifiers;->id_ea_rsa:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_2
+
+    :cond_1
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;
+
+    move-result-object v8
+
+    new-instance v0, Lorg/bouncycastle/crypto/params/RSAPrivateCrtKeyParameters;
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getModulus()Ljava/math/BigInteger;
+
+    move-result-object v1
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getPublicExponent()Ljava/math/BigInteger;
+
+    move-result-object v2
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getPrivateExponent()Ljava/math/BigInteger;
+
+    move-result-object v3
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getPrime1()Ljava/math/BigInteger;
+
+    move-result-object v4
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getPrime2()Ljava/math/BigInteger;
+
+    move-result-object v5
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getExponent1()Ljava/math/BigInteger;
+
+    move-result-object v6
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getExponent2()Ljava/math/BigInteger;
+
+    move-result-object v7
+
+    invoke-virtual {v8}, Lorg/bouncycastle/asn1/pkcs/RSAPrivateKey;->getCoefficient()Ljava/math/BigInteger;
+
+    move-result-object v8
+
+    invoke-direct/range {v0 .. v8}, Lorg/bouncycastle/crypto/params/RSAPrivateCrtKeyParameters;-><init>(Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;)V
+
+    :goto_0
+    return-object v0
+
+    :cond_2
+    sget-object v3, Lorg/bouncycastle/asn1/pkcs/PKCSObjectIdentifiers;->dhKeyAgreement:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_4
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getParameters()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/pkcs/DHParameter;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/pkcs/DHParameter;
+
+    move-result-object v3
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    check-cast v0, Lorg/bouncycastle/asn1/ASN1Integer;
+
+    invoke-virtual {v3}, Lorg/bouncycastle/asn1/pkcs/DHParameter;->getL()Ljava/math/BigInteger;
+
+    move-result-object v1
+
+    if-nez v1, :cond_3
+
+    const/4 v1, 0x0
+
+    :goto_1
+    new-instance v4, Lorg/bouncycastle/crypto/params/DHParameters;
+
+    invoke-virtual {v3}, Lorg/bouncycastle/asn1/pkcs/DHParameter;->getP()Ljava/math/BigInteger;
+
+    move-result-object v5
+
+    invoke-virtual {v3}, Lorg/bouncycastle/asn1/pkcs/DHParameter;->getG()Ljava/math/BigInteger;
+
+    move-result-object v3
+
+    invoke-direct {v4, v5, v3, v2, v1}, Lorg/bouncycastle/crypto/params/DHParameters;-><init>(Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;I)V
+
+    new-instance v1, Lorg/bouncycastle/crypto/params/DHPrivateKeyParameters;
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getValue()Ljava/math/BigInteger;
+
+    move-result-object v0
+
+    invoke-direct {v1, v0, v4}, Lorg/bouncycastle/crypto/params/DHPrivateKeyParameters;-><init>(Ljava/math/BigInteger;Lorg/bouncycastle/crypto/params/DHParameters;)V
+
+    move-object v0, v1
+
+    goto :goto_0
+
+    :cond_3
+    invoke-virtual {v1}, Ljava/math/BigInteger;->intValue()I
+
+    move-result v1
+
+    goto :goto_1
+
+    :cond_4
+    sget-object v3, Lorg/bouncycastle/internal/asn1/oiw/OIWObjectIdentifiers;->elGamalAlgorithm:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_5
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getParameters()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/internal/asn1/oiw/ElGamalParameter;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/internal/asn1/oiw/ElGamalParameter;
+
+    move-result-object v2
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    check-cast v0, Lorg/bouncycastle/asn1/ASN1Integer;
+
+    new-instance v1, Lorg/bouncycastle/crypto/params/ElGamalPrivateKeyParameters;
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getValue()Ljava/math/BigInteger;
+
+    move-result-object v0
+
+    new-instance v3, Lorg/bouncycastle/crypto/params/ElGamalParameters;
+
+    invoke-virtual {v2}, Lorg/bouncycastle/internal/asn1/oiw/ElGamalParameter;->getP()Ljava/math/BigInteger;
+
+    move-result-object v4
+
+    invoke-virtual {v2}, Lorg/bouncycastle/internal/asn1/oiw/ElGamalParameter;->getG()Ljava/math/BigInteger;
+
+    move-result-object v2
+
+    invoke-direct {v3, v4, v2}, Lorg/bouncycastle/crypto/params/ElGamalParameters;-><init>(Ljava/math/BigInteger;Ljava/math/BigInteger;)V
+
+    invoke-direct {v1, v0, v3}, Lorg/bouncycastle/crypto/params/ElGamalPrivateKeyParameters;-><init>(Ljava/math/BigInteger;Lorg/bouncycastle/crypto/params/ElGamalParameters;)V
+
+    move-object v0, v1
+
+    goto :goto_0
+
+    :cond_5
+    sget-object v3, Lorg/bouncycastle/asn1/x9/X9ObjectIdentifiers;->id_dsa:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_6
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    check-cast v0, Lorg/bouncycastle/asn1/ASN1Integer;
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getParameters()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v1
+
+    if-eqz v1, :cond_1a
+
+    invoke-interface {v1}, Lorg/bouncycastle/asn1/ASN1Encodable;->toASN1Primitive()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lorg/bouncycastle/asn1/x509/DSAParameter;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/x509/DSAParameter;
+
+    move-result-object v2
+
+    new-instance v1, Lorg/bouncycastle/crypto/params/DSAParameters;
+
+    invoke-virtual {v2}, Lorg/bouncycastle/asn1/x509/DSAParameter;->getP()Ljava/math/BigInteger;
+
+    move-result-object v3
+
+    invoke-virtual {v2}, Lorg/bouncycastle/asn1/x509/DSAParameter;->getQ()Ljava/math/BigInteger;
+
+    move-result-object v4
+
+    invoke-virtual {v2}, Lorg/bouncycastle/asn1/x509/DSAParameter;->getG()Ljava/math/BigInteger;
+
+    move-result-object v2
+
+    invoke-direct {v1, v3, v4, v2}, Lorg/bouncycastle/crypto/params/DSAParameters;-><init>(Ljava/math/BigInteger;Ljava/math/BigInteger;Ljava/math/BigInteger;)V
+
+    :goto_2
+    new-instance v2, Lorg/bouncycastle/crypto/params/DSAPrivateKeyParameters;
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getValue()Ljava/math/BigInteger;
+
+    move-result-object v0
+
+    invoke-direct {v2, v0, v1}, Lorg/bouncycastle/crypto/params/DSAPrivateKeyParameters;-><init>(Ljava/math/BigInteger;Lorg/bouncycastle/crypto/params/DSAParameters;)V
+
+    move-object v0, v2
+
+    goto/16 :goto_0
+
+    :cond_6
+    sget-object v3, Lorg/bouncycastle/asn1/x9/X9ObjectIdentifiers;->id_ecPublicKey:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_9
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getParameters()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/x9/X962Parameters;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/x9/X962Parameters;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/x9/X962Parameters;->isNamedCurve()Z
+
+    move-result v1
+
+    if-eqz v1, :cond_8
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/x9/X962Parameters;->getParameters()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v0
+
+    check-cast v0, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-static {v0}, Lorg/bouncycastle/crypto/ec/CustomNamedCurves;->getByOID(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)Lorg/bouncycastle/asn1/x9/X9ECParameters;
+
+    move-result-object v1
+
+    if-nez v1, :cond_7
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/x9/ECNamedCurveTable;->getByOID(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)Lorg/bouncycastle/asn1/x9/X9ECParameters;
+
+    move-result-object v1
+
+    :cond_7
+    new-instance v2, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;
+
+    invoke-direct {v2, v0, v1}, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;-><init>(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/x9/X9ECParameters;)V
+
+    move-object v0, v2
+
+    :goto_3
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lorg/bouncycastle/asn1/sec/ECPrivateKey;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/sec/ECPrivateKey;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/sec/ECPrivateKey;->getKey()Ljava/math/BigInteger;
+
+    move-result-object v2
+
+    new-instance v1, Lorg/bouncycastle/crypto/params/ECPrivateKeyParameters;
+
+    invoke-direct {v1, v2, v0}, Lorg/bouncycastle/crypto/params/ECPrivateKeyParameters;-><init>(Ljava/math/BigInteger;Lorg/bouncycastle/crypto/params/ECDomainParameters;)V
+
+    move-object v0, v1
+
+    goto/16 :goto_0
+
+    :cond_8
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/x9/X962Parameters;->getParameters()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/x9/X9ECParameters;
+
+    move-result-object v5
+
+    new-instance v0, Lorg/bouncycastle/crypto/params/ECDomainParameters;
+
+    invoke-virtual {v5}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getCurve()Lorg/bouncycastle/math/ec/ECCurve;
+
+    move-result-object v1
+
+    invoke-virtual {v5}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getG()Lorg/bouncycastle/math/ec/ECPoint;
+
+    move-result-object v2
+
+    invoke-virtual {v5}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getN()Ljava/math/BigInteger;
+
+    move-result-object v3
+
+    invoke-virtual {v5}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getH()Ljava/math/BigInteger;
+
+    move-result-object v4
+
+    invoke-virtual {v5}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getSeed()[B
+
+    move-result-object v5
+
+    invoke-direct/range {v0 .. v5}, Lorg/bouncycastle/crypto/params/ECDomainParameters;-><init>(Lorg/bouncycastle/math/ec/ECCurve;Lorg/bouncycastle/math/ec/ECPoint;Ljava/math/BigInteger;Ljava/math/BigInteger;[B)V
+
+    goto :goto_3
+
+    :cond_9
+    sget-object v3, Lorg/bouncycastle/internal/asn1/edec/EdECObjectIdentifiers;->id_X25519:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_b
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKeyLength()I
+
+    move-result v0
+
+    if-ne v8, v0, :cond_a
+
+    new-instance v0, Lorg/bouncycastle/crypto/params/X25519PrivateKeyParameters;
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKey()Lorg/bouncycastle/asn1/ASN1OctetString;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/ASN1OctetString;->getOctets()[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v1}, Lorg/bouncycastle/crypto/params/X25519PrivateKeyParameters;-><init>([B)V
+
+    goto/16 :goto_0
+
+    :cond_a
+    new-instance v0, Lorg/bouncycastle/crypto/params/X25519PrivateKeyParameters;
+
+    invoke-static {p0}, Lorg/bouncycastle/crypto/util/PrivateKeyFactory;->getRawKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v1}, Lorg/bouncycastle/crypto/params/X25519PrivateKeyParameters;-><init>([B)V
+
+    goto/16 :goto_0
+
+    :cond_b
+    sget-object v3, Lorg/bouncycastle/internal/asn1/edec/EdECObjectIdentifiers;->id_X448:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_d
+
+    const/16 v0, 0x38
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKeyLength()I
+
+    move-result v1
+
+    if-ne v0, v1, :cond_c
+
+    new-instance v0, Lorg/bouncycastle/crypto/params/X448PrivateKeyParameters;
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKey()Lorg/bouncycastle/asn1/ASN1OctetString;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/ASN1OctetString;->getOctets()[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v1}, Lorg/bouncycastle/crypto/params/X448PrivateKeyParameters;-><init>([B)V
+
+    goto/16 :goto_0
+
+    :cond_c
+    new-instance v0, Lorg/bouncycastle/crypto/params/X448PrivateKeyParameters;
+
+    invoke-static {p0}, Lorg/bouncycastle/crypto/util/PrivateKeyFactory;->getRawKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v1}, Lorg/bouncycastle/crypto/params/X448PrivateKeyParameters;-><init>([B)V
+
+    goto/16 :goto_0
+
+    :cond_d
+    sget-object v3, Lorg/bouncycastle/internal/asn1/edec/EdECObjectIdentifiers;->id_Ed25519:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_e
+
+    new-instance v0, Lorg/bouncycastle/crypto/params/Ed25519PrivateKeyParameters;
+
+    invoke-static {p0}, Lorg/bouncycastle/crypto/util/PrivateKeyFactory;->getRawKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v1}, Lorg/bouncycastle/crypto/params/Ed25519PrivateKeyParameters;-><init>([B)V
+
+    goto/16 :goto_0
+
+    :cond_e
+    sget-object v3, Lorg/bouncycastle/internal/asn1/edec/EdECObjectIdentifiers;->id_Ed448:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_f
+
+    new-instance v0, Lorg/bouncycastle/crypto/params/Ed448PrivateKeyParameters;
+
+    invoke-static {p0}, Lorg/bouncycastle/crypto/util/PrivateKeyFactory;->getRawKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v1}, Lorg/bouncycastle/crypto/params/Ed448PrivateKeyParameters;-><init>([B)V
+
+    goto/16 :goto_0
+
+    :cond_f
+    sget-object v3, Lorg/bouncycastle/asn1/cryptopro/CryptoProObjectIdentifiers;->gostR3410_2001:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-nez v3, :cond_10
+
+    sget-object v3, Lorg/bouncycastle/internal/asn1/rosstandart/RosstandartObjectIdentifiers;->id_tc26_gost_3410_12_512:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-nez v3, :cond_10
+
+    sget-object v3, Lorg/bouncycastle/internal/asn1/rosstandart/RosstandartObjectIdentifiers;->id_tc26_gost_3410_12_256:Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    invoke-virtual {v0, v3}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->equals(Lorg/bouncycastle/asn1/ASN1Primitive;)Z
+
+    move-result v3
+
+    if-eqz v3, :cond_19
+
+    :cond_10
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getParameters()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v3
+
+    invoke-static {v3}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;
+
+    move-result-object v4
+
+    invoke-interface {v3}, Lorg/bouncycastle/asn1/ASN1Encodable;->toASN1Primitive()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v3
+
+    instance-of v5, v3, Lorg/bouncycastle/asn1/ASN1Sequence;
+
+    if-eqz v5, :cond_15
+
+    invoke-static {v3}, Lorg/bouncycastle/asn1/ASN1Sequence;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1Sequence;
+
+    move-result-object v5
+
+    invoke-virtual {v5}, Lorg/bouncycastle/asn1/ASN1Sequence;->size()I
+
+    move-result v5
+
+    const/4 v6, 0x2
+
+    if-eq v5, v6, :cond_11
+
+    invoke-static {v3}, Lorg/bouncycastle/asn1/ASN1Sequence;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1Sequence;
+
+    move-result-object v3
+
+    invoke-virtual {v3}, Lorg/bouncycastle/asn1/ASN1Sequence;->size()I
+
+    move-result v3
+
+    const/4 v5, 0x3
+
+    if-ne v3, v5, :cond_15
+
+    :cond_11
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getPublicKeyParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/cryptopro/ECGOST3410NamedCurves;->getByOIDX9(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)Lorg/bouncycastle/asn1/x9/X9ECParameters;
+
+    move-result-object v0
+
+    new-instance v2, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;
+
+    new-instance v1, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getPublicKeyParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v3
+
+    invoke-direct {v1, v3, v0}, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;-><init>(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/x9/X9ECParameters;)V
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getPublicKeyParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v0
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getDigestParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v3
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getEncryptionParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v5
+
+    invoke-direct {v2, v1, v0, v3, v5}, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;-><init>(Lorg/bouncycastle/crypto/params/ECDomainParameters;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)V
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKeyLength()I
+
+    move-result v0
+
+    if-eq v0, v8, :cond_12
+
+    const/16 v1, 0x40
+
+    if-ne v0, v1, :cond_13
+
+    :cond_12
+    new-instance v0, Ljava/math/BigInteger;
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getPrivateKey()Lorg/bouncycastle/asn1/ASN1OctetString;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/ASN1OctetString;->getOctets()[B
+
+    move-result-object v1
+
+    invoke-static {v1}, Lorg/bouncycastle/util/Arrays;->reverse([B)[B
+
+    move-result-object v1
+
+    invoke-direct {v0, v7, v1}, Ljava/math/BigInteger;-><init>(I[B)V
+
+    :goto_4
+    new-instance v1, Lorg/bouncycastle/crypto/params/ECPrivateKeyParameters;
+
+    new-instance v3, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getPublicKeyParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v5
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getDigestParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v6
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getEncryptionParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v4
+
+    invoke-direct {v3, v2, v5, v6, v4}, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;-><init>(Lorg/bouncycastle/crypto/params/ECDomainParameters;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)V
+
+    invoke-direct {v1, v0, v3}, Lorg/bouncycastle/crypto/params/ECPrivateKeyParameters;-><init>(Ljava/math/BigInteger;Lorg/bouncycastle/crypto/params/ECDomainParameters;)V
+
+    move-object v0, v1
+
+    goto/16 :goto_0
+
+    :cond_13
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    instance-of v1, v0, Lorg/bouncycastle/asn1/ASN1Integer;
+
+    if-eqz v1, :cond_14
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getPositiveValue()Ljava/math/BigInteger;
+
+    move-result-object v0
+
+    goto :goto_4
+
+    :cond_14
+    invoke-static {v0}, Lorg/bouncycastle/asn1/ASN1OctetString;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1OctetString;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1OctetString;->getOctets()[B
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/util/Arrays;->reverse([B)[B
+
+    move-result-object v1
+
+    new-instance v0, Ljava/math/BigInteger;
+
+    invoke-direct {v0, v7, v1}, Ljava/math/BigInteger;-><init>(I[B)V
+
+    goto :goto_4
+
+    :cond_15
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x509/AlgorithmIdentifier;->getParameters()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lorg/bouncycastle/asn1/x9/X962Parameters;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/x9/X962Parameters;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x9/X962Parameters;->isNamedCurve()Z
+
+    move-result v3
+
+    if-eqz v3, :cond_17
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x9/X962Parameters;->getParameters()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/x9/ECNamedCurveTable;->getByOID(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)Lorg/bouncycastle/asn1/x9/X9ECParameters;
+
+    move-result-object v1
+
+    new-instance v2, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;
+
+    new-instance v3, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;
+
+    invoke-direct {v3, v0, v1}, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;-><init>(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/x9/X9ECParameters;)V
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getPublicKeyParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v0
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getDigestParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v1
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getEncryptionParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v5
+
+    invoke-direct {v2, v3, v0, v1, v5}, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;-><init>(Lorg/bouncycastle/crypto/params/ECDomainParameters;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)V
+
+    :cond_16
+    :goto_5
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    instance-of v1, v0, Lorg/bouncycastle/asn1/ASN1Integer;
+
+    if-eqz v1, :cond_18
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1Integer;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1Integer;->getValue()Ljava/math/BigInteger;
+
+    move-result-object v0
+
+    goto :goto_4
+
+    :cond_17
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x9/X962Parameters;->isImplicitlyCA()Z
+
+    move-result v3
+
+    if-nez v3, :cond_16
+
+    invoke-virtual {v1}, Lorg/bouncycastle/asn1/x9/X962Parameters;->getParameters()Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v1
+
+    invoke-static {v1}, Lorg/bouncycastle/asn1/x9/X9ECParameters;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/x9/X9ECParameters;
+
+    move-result-object v1
+
+    new-instance v2, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;
+
+    new-instance v3, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;
+
+    invoke-direct {v3, v0, v1}, Lorg/bouncycastle/crypto/params/ECNamedDomainParameters;-><init>(Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/x9/X9ECParameters;)V
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getPublicKeyParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v0
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getDigestParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v1
+
+    invoke-virtual {v4}, Lorg/bouncycastle/asn1/cryptopro/GOST3410PublicKeyAlgParameters;->getEncryptionParamSet()Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;
+
+    move-result-object v5
+
+    invoke-direct {v2, v3, v0, v1, v5}, Lorg/bouncycastle/crypto/params/ECGOST3410Parameters;-><init>(Lorg/bouncycastle/crypto/params/ECDomainParameters;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;Lorg/bouncycastle/asn1/ASN1ObjectIdentifier;)V
+
+    goto :goto_5
+
+    :cond_18
+    invoke-static {v0}, Lorg/bouncycastle/asn1/sec/ECPrivateKey;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/sec/ECPrivateKey;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/sec/ECPrivateKey;->getKey()Ljava/math/BigInteger;
+
+    move-result-object v0
+
+    goto/16 :goto_4
+
+    :cond_19
+    new-instance v0, Ljava/lang/RuntimeException;
+
+    const-string v1, "algorithm identifier in private key not recognised"
+
+    invoke-direct {v0, v1}, Ljava/lang/RuntimeException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_1a
+    move-object v1, v2
+
+    goto/16 :goto_2
+.end method
+
+.method public static createKey([B)Lorg/bouncycastle/crypto/params/AsymmetricKeyParameter;
+    .locals 2
+    .annotation system Ldalvik/annotation/Throws;
+        value = {
+            Ljava/io/IOException;
+        }
+    .end annotation
+
+    if-nez p0, :cond_0
+
+    new-instance v0, Ljava/lang/IllegalArgumentException;
+
+    const-string v1, "privateKeyInfoData array null"
+
+    invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_0
+    array-length v0, p0
+
+    if-nez v0, :cond_1
+
+    new-instance v0, Ljava/lang/IllegalArgumentException;
+
+    const-string v1, "privateKeyInfoData array empty"
+
+    invoke-direct {v0, v1}, Ljava/lang/IllegalArgumentException;-><init>(Ljava/lang/String;)V
+
+    throw v0
+
+    :cond_1
+    invoke-static {p0}, Lorg/bouncycastle/asn1/ASN1Primitive;->fromByteArray([B)Lorg/bouncycastle/asn1/ASN1Primitive;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/crypto/util/PrivateKeyFactory;->createKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)Lorg/bouncycastle/crypto/params/AsymmetricKeyParameter;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method private static getRawKey(Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;)[B
+    .locals 1
+    .annotation system Ldalvik/annotation/Throws;
+        value = {
+            Ljava/io/IOException;
+        }
+    .end annotation
+
+    invoke-virtual {p0}, Lorg/bouncycastle/asn1/pkcs/PrivateKeyInfo;->parsePrivateKey()Lorg/bouncycastle/asn1/ASN1Encodable;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lorg/bouncycastle/asn1/ASN1OctetString;->getInstance(Ljava/lang/Object;)Lorg/bouncycastle/asn1/ASN1OctetString;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lorg/bouncycastle/asn1/ASN1OctetString;->getOctets()[B
+
+    move-result-object v0
+
+    return-object v0
+.end method
