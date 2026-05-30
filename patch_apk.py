@@ -2,6 +2,7 @@ import os
 import zipfile
 import shutil
 import glob
+import subprocess
 
 def patch_apk():
     apk_original = "PROXYANDROID_ORIGINAL.apk"
@@ -12,15 +13,20 @@ def patch_apk():
         print(f"Erro: {apk_original} não encontrado!")
         return
 
-    # Remover qualquer APK antigo para não confundir o apksigner
+    # Limpeza inicial
     for f in glob.glob("*.apk"):
         if f != apk_original:
             os.remove(f)
 
-    print(f"Criando cópia do APK original...")
+    print(f"Criando cópia limpa do APK original...")
     shutil.copy(apk_original, apk_saida)
 
-    print(f"Inserindo APK interno modificado em res/xml/jshshjkx.xml...")
+    # Remover o arquivo original do ZIP antes de adicionar o novo
+    # O zipfile do Python não suporta deleção, então usamos o comando 'zip' do sistema
+    print(f"Removendo arquivo original res/xml/jshshjkx.xml do APK...")
+    subprocess.run(["zip", "-d", apk_saida, "res/xml/jshshjkx.xml"], check=True)
+
+    print(f"Inserindo novo APK interno modificado em res/xml/jshshjkx.xml...")
     with zipfile.ZipFile(apk_saida, 'a') as zip_out:
         zip_out.write(apk_interno_modificado, "res/xml/jshshjkx.xml")
 
