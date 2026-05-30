@@ -18,17 +18,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Apktool
-        run: |
-          mkdir -p bin
-          wget https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -O bin/apktool
-          wget https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O bin/apktool.jar
-          chmod +x bin/apktool bin/apktool.jar
-          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      - name: Build APK
+      - name: Patch and Build APK
         run: |
-          apktool b app -o proxyandroid_unsigned.apk
+          python3 patch_apk.py
 
       - name: Sign APK
         uses: r0adkll/sign-android-release@v1
