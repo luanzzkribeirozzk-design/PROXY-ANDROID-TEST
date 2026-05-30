@@ -27,28 +27,31 @@ jobs:
         run: |
           python3 patch_apk.py
 
-      - name: Zipalign APK
+      - name: Sign APK Manual
         run: |
-          ZIPALIGN_PATH=$(find $ANDROID_HOME/build-tools -name zipalign | sort -r | head -n 1)
-          echo "Usando zipalign em: $ZIPALIGN_PATH"
-          # Alinha o APK e substitui o arquivo original para garantir que apenas UM APK exista
-          $ZIPALIGN_PATH -f -v 4 proxyandroid_to_sign.apk proxyandroid_final_unsigned.apk
-          rm proxyandroid_to_sign.apk
-
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: .
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
+          # 1. Localizar ferramentas
+          ZIPALIGN=$(find $ANDROID_HOME/build-tools -name zipalign | sort -r | head -n 1)
+          APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -r | head -n 1)
+          
+          # 2. Alinhamento
+          $ZIPALIGN -f -v 4 proxyandroid_to_sign.apk proxyandroid_aligned.apk
+          
+          # 3. Decodificar Keystore
+          echo "${{ secrets.SIGNING_KEY }}" | base64 -d > release.jks
+          
+          # 4. Assinar
+          $APKSIGNER sign --ks release.jks \
+            --ks-key-alias "${{ secrets.ALIAS }}" \
+            --ks-pass pass:"${{ secrets.KEY_STORE_PASSWORD }}" \
+            --key-pass pass:"${{ secrets.KEY_PASSWORD }}" \
+            --out proxyandroid_signed.apk \
+            proxyandroid_aligned.apk
+            
+          # 5. Verificar
+          $APKSIGNER verify proxyandroid_signed.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: proxyandroid-no-login
-          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          path: proxyandroid_signed.apk
