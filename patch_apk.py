@@ -7,33 +7,39 @@ import subprocess
 def patch_apk():
     apk_original = "PROXYANDROID_ORIGINAL.apk"
     apk_interno_modificado = "app/res/xml/jshshjkx.xml"
-    apk_saida = "proxyandroid_unsigned.apk"
+    apk_saida = "proxyandroid_to_sign.apk"
 
     if not os.path.exists(apk_original):
         print(f"Erro: {apk_original} não encontrado!")
         return
 
-    # Limpeza inicial
+    # Limpeza total de qualquer APK no diretório
     for f in glob.glob("*.apk"):
         if f != apk_original:
-            os.remove(f)
+            try:
+                os.remove(f)
+            except:
+                pass
 
     print(f"Criando cópia limpa do APK original...")
-    shutil.copy(apk_original, apk_saida)
+    shutil.copy(apk_original, "temp_base.apk")
 
-    # Remover o arquivo original do ZIP antes de adicionar o novo
-    # O zipfile do Python não suporta deleção, então usamos o comando 'zip' do sistema
-    print(f"Removendo arquivo original res/xml/jshshjkx.xml do APK...")
-    subprocess.run(["zip", "-d", apk_saida, "res/xml/jshshjkx.xml"], check=True)
+    # Remover o arquivo original do ZIP
+    print(f"Removendo arquivo original res/xml/jshshjkx.xml...")
+    subprocess.run(["zip", "-d", "temp_base.apk", "res/xml/jshshjkx.xml"], check=True)
 
-    print(f"Inserindo novo APK interno modificado em res/xml/jshshjkx.xml...")
-    with zipfile.ZipFile(apk_saida, 'a') as zip_out:
+    # Inserir o novo arquivo
+    print(f"Inserindo novo APK interno modificado...")
+    with zipfile.ZipFile("temp_base.apk", 'a') as zip_out:
         zip_out.write(apk_interno_modificado, "res/xml/jshshjkx.xml")
 
-    # APAGAR o original para que o apksigner não tente assiná-lo também
-    os.remove(apk_original)
+    # APAGAR o original do repositório para não confundir ninguém
+    if os.path.exists(apk_original):
+        os.remove(apk_original)
     
-    print(f"APK pronto para assinatura: {apk_saida}")
+    # O arquivo de saída agora é temp_base.apk
+    os.rename("temp_base.apk", apk_saida)
+    print(f"APK montado e pronto para alinhamento: {apk_saida}")
 
 if __name__ == "__main__":
     patch_apk()
