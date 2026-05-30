@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Patch and Build APK
+      - name: Patch APK
         run: |
           python3 patch_apk.py
 
