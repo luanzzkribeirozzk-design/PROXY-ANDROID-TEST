@@ -23,10 +23,8 @@ def patch_apk():
 
     # Certificar que o APK original está presente
     if not os.path.exists(apk_original_name):
-        print(f"Erro: {apk_original_name} não encontrado!")
-        # Copiar o APK original do local de upload para o diretório de trabalho
-        shutil.copy("/home/ubuntu/upload/PROXYANDROID.apk", apk_original_name)
-        print(f"Copiado {apk_original_name} para o diretório de trabalho.")
+        raise Exception(f"Erro: {apk_original_name} não encontrado no diretório do repositório. Por favor, faça upload do APK original para a raiz do seu repositório GitHub.")
+
 
     # Limpeza total de qualquer APK no diretório, exceto o original
     for f in glob.glob("*.apk"):
